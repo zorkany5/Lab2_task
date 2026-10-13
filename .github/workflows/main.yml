@@ -1,0 +1,33 @@
+name: Sequential Jobs Workflow
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  # Job 1: Executes first
+  first_job:
+    name: First Job (Build & Test)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run primary task
+        run: |
+          echo "Running first job..."
+          # Replace with your actual build/test command
+          exit 0
+
+  # Job 2: Runs ONLY if first_job succeeds
+  second_job:
+    name: Second Job (Deploy)
+    needs: first_job # Ensures job 2 waits for job 1 and fails if job 1 fails
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run dependent task
+        run: |
+          echo "First job succeeded! Starting second job..."
